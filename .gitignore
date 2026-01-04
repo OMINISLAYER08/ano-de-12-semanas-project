@@ -2,7 +2,7 @@ node_modules/
 .DS_Store
 *.log
 backup/
-app-backup.js
-index-old.html
-styles-old.css
+# app-backup.js
+# index-old.html
+# styles-old.css
 .gemini/

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Aplicativo de produtividade pessoal baseado no Ano de 12 Semanas">
+    <title>Ano de 12 Semanas | Gestão de Metas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo">
+                    <span class="logo-icon">📊</span>
+                    <span class="logo-text">Ano de 12 Semanas</span>
+                </h1>
+                <nav class="nav">
+                    <button class="nav-btn active" data-view="dashboard">
+                        <span class="nav-icon">🏠</span>
+                        Dashboard
+                    </button>
+                    <button class="nav-btn" data-view="cycles">
+                        <span class="nav-icon">🔄</span>
+                        Ciclos
+                    </button>
+                    <button class="nav-btn" data-view="goals">
+                        <span class="nav-icon">🎯</span>
+                        Metas
+                    </button>
+                    <button class="nav-btn" data-view="tasks">
+                        <span class="nav-icon">✅</span>
+                        Tarefas
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Dashboard View -->
+            <section id="dashboard-view" class="view active">
+                <div class="view-header">
+                    <h2 class="view-title">Dashboard</h2>
+                    <p class="view-subtitle">Visão geral do seu progresso</p>
+                </div>
+
+                <div class="dashboard-grid">
+                    <!-- Current Cycle Card -->
+                    <div class="card glass-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Ciclo Atual</h3>
+                            <span class="badge" id="current-week-badge">Semana 1</span>
+                        </div>
+                        <div class="card-content">
+                            <p id="cycle-name" class="cycle-name">Nenhum ciclo ativo</p>
+                            <div class="date-range" id="cycle-dates">
+                                <span>-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Overall Progress Card -->
+                    <div class="card glass-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Progresso Geral</h3>
+                            <span class="percentage" id="overall-percentage">0%</span>
+                        </div>
+                        <div class="card-content">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="overall-progress" style="width: 0%"></div>
+                            </div>
+                            <p class="progress-text" id="overall-tasks">0 de 0 tarefas completadas</p>
+                        </div>
+                    </div>
+
+                    <!-- Weekly Progress Card -->
+                    <div class="card glass-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Progresso Semanal</h3>
+                            <span class="percentage" id="weekly-percentage">0%</span>
+                        </div>
+                        <div class="card-content">
+                            <div class="progress-bar">
+                                <div class="progress-fill accent" id="weekly-progress" style="width: 0%"></div>
+                            </div>
+                            <p class="progress-text" id="weekly-tasks">0 de 0 tarefas esta semana</p>
+                        </div>
+                    </div>
+
+                    <!-- Goals Summary Card -->
+                    <div class="card glass-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Metas</h3>
+                            <span class="badge accent" id="goals-count">0</span>
+                        </div>
+                        <div class="card-content">
+                            <div id="goals-list" class="goals-summary">
+                                <p class="empty-state">Nenhuma meta definida</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- This Week's Tasks -->
+                <div class="card glass-card tasks-section">
+                    <div class="card-header">
+                        <h3 class="card-title">Tarefas desta Semana</h3>
+                        <button class="btn-icon" id="add-task-from-dashboard">
+                            <span>➕</span>
+                        </button>
+                    </div>
+                    <div class="card-content">
+                        <div id="weekly-tasks-list" class="tasks-list">
+                            <p class="empty-state">Nenhuma tarefa para esta semana</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cycles View -->
+            <section id="cycles-view" class="view">
+                <div class="view-header">
+                    <div>
+                        <h2 class="view-title">Ciclos de 12 Semanas</h2>
+                        <p class="view-subtitle">Gerencie seus ciclos de metas</p>
+                    </div>
+                    <button class="btn btn-primary" id="new-cycle-btn">
+                        <span>➕</span> Novo Ciclo
+                    </button>
+                </div>
+
+                <div id="cycles-list" class="cycles-list">
+                    <p class="empty-state">Nenhum ciclo criado ainda. Comece criando seu primeiro ciclo de 12 semanas!</p>
+                </div>
+            </section>
+
+            <!-- Goals View -->
+            <section id="goals-view" class="view">
+                <div class="view-header">
+                    <div>
+                        <h2 class="view-title">Metas</h2>
+                        <p class="view-subtitle">Defina e acompanhe suas metas</p>
+                    </div>
+                    <button class="btn btn-primary" id="new-goal-btn">
+                        <span>➕</span> Nova Meta
+                    </button>
+                </div>
+
+                <div id="goals-view-list" class="goals-grid">
+                    <p class="empty-state">Crie um ciclo e comece a adicionar suas metas!</p>
+                </div>
+            </section>
+
+            <!-- Tasks View -->
+            <section id="tasks-view" class="view">
+                <div class="view-header">
+                    <div>
+                        <h2 class="view-title">Tarefas</h2>
+                        <p class="view-subtitle">Organize suas tarefas por semana</p>
+                    </div>
+                    <button class="btn btn-primary" id="new-task-btn">
+                        <span>➕</span> Nova Tarefa
+                    </button>
+                </div>
+
+                <!-- Week Selector -->
+                <div class="week-selector" id="week-selector">
+                    <!-- Will be populated dynamically -->
+                </div>
+
+                <div id="tasks-view-list" class="tasks-list">
+                    <p class="empty-state">Adicione tarefas às suas metas!</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modal for New Cycle -->
+    <div id="cycle-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Novo Ciclo de 12 Semanas</h3>
+                <button class="modal-close" data-modal="cycle-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="cycle-form">
+                    <div class="form-group">
+                        <label for="cycle-title">Nome do Ciclo</label>
+                        <input type="text" id="cycle-title" placeholder="Ex: Q1 2026 - Foco em Saúde" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cycle-start">Data de Início</label>
+                        <input type="date" id="cycle-start" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" data-modal="cycle-modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Criar Ciclo</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for New Goal -->
+    <div id="goal-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Nova Meta</h3>
+                <button class="modal-close" data-modal="goal-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="goal-form">
+                    <div class="form-group">
+                        <label for="goal-title">Título da Meta</label>
+                        <input type="text" id="goal-title" placeholder="Ex: Perder 5kg" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="goal-description">Descrição</label>
+                        <textarea id="goal-description" rows="3" placeholder="Descreva sua meta em detalhes..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" data-modal="goal-modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Criar Meta</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for New Task -->
+    <div id="task-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Nova Tarefa</h3>
+                <button class="modal-close" data-modal="task-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="task-form">
+                    <div class="form-group">
+                        <label for="task-goal">Meta</label>
+                        <select id="task-goal" required>
+                            <option value="">Selecione uma meta</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-title">Título da Tarefa</label>
+                        <input type="text" id="task-title" placeholder="Ex: Treinar 3x esta semana" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-week">Semana</label>
+                        <select id="task-week" required>
+                            <!-- Will be populated dynamically -->
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" data-modal="task-modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Criar Tarefa</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
