@@ -1,0 +1,46 @@
+{
+  "name": "ano-12-semanas",
+  "productName": "Ano de 12 Semanas",
+  "version": "1.0.0",
+  "description": "Aplicativo de produtividade pessoal baseado na metodologia do Ano de 12 Semanas",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "dist": "electron-builder --win --x64"
+  },
+  "keywords": ["produtividade", "metas", "12-semanas", "planner"],
+  "author": "Miguel",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "com.miguel.ano12semanas",
+    "productName": "Ano de 12 Semanas",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "styles.css",
+      "app.js",
+      "assets/**/*"
+    ],
+    "win": {
+      "target": ["nsis"],
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  }
+}

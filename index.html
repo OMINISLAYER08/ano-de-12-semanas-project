@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Aplicativo de produtividade pessoal baseado no Ano de 12 Semanas">
+    <title>Ano de 12 Semanas | Metas Semanais</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!-- Sidebar Overlay -->
+    <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    
+    <!-- Sidebar Menu -->
+    <aside id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h2 class="sidebar-title">Menu</h2>
+            <button class="sidebar-close" onclick="toggleSidebar()">×</button>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <button class="sidebar-link active" onclick="switchView('weekly'); toggleSidebar();">
+                <span class="sidebar-icon">🏠</span>
+                <span>Visão Semanal</span>
+            </button>
+            <button class="sidebar-link" onclick="switchView('cycles'); toggleSidebar();">
+                <span class="sidebar-icon">🔄</span>
+                <span>Gerenciar Ciclos</span>
+            </button>
+            <button class="sidebar-link" onclick="switchView('main-goals'); toggleSidebar();">
+                <span class="sidebar-icon">🎯</span>
+                <span>Metas Principais</span>
+            </button>
+            <button class="sidebar-link" onclick="switchView('sub-goals'); toggleSidebar();">
+                <span class="sidebar-icon">✅</span>
+                <span>Sub-metas</span>
+            </button>
+            <button class="sidebar-link" onclick="switchView('stats'); toggleSidebar();">
+                <span class="sidebar-icon">📊</span>
+                <span>Estatísticas</span>
+            </button>
+            <div style="margin-top: auto; padding-top: var(--space-md); border-top: 1px solid var(--glass-border);">
+                <button class="sidebar-link" onclick="if(confirm('Tem certeza? Isso apagará todos os dados!')) { localStorage.clear(); location.reload(); }" style="color: var(--color-error);">
+                    <span class="sidebar-icon">🗑️</span>
+                    <span>Limpar Tudo</span>
+                </button>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Hamburger Button -->
+        <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <!-- User Stats Bar (XP & Level) -->
+        <div class="user-stats-bar glass-card">
+            <div class="user-info">
+                <span class="user-level-badge">Lvl <span id="user-level">1</span></span>
+            </div>
+            <div class="xp-container">
+                <div class="xp-bar-bg">
+                    <div id="xp-bar-fill" class="xp-bar-fill" style="width: 0%"></div>
+                </div>
+                <span id="xp-label" class="xp-label">0 / 100 XP</span>
+            </div>
+        </div>
+
+        <!-- Weekly View (Main Screen) -->
+        <section id="weekly-view" class="view active">
+            <div class="weekly-header">
+                <h1 class="weekly-title" id="week-title">Semana 1</h1>
+                <p class="weekly-subtitle" id="week-dates">-</p>
+            </div>
+
+            <!-- Countdown Timer -->
+            <div class="countdown-card card glass-card">
+                <div id="countdown-timer"></div>
+            </div>
+
+            <!-- Main Goals Section -->
+            <div class="main-goals-section">
+                <div class="section-header">
+                    <h2 class="section-title">🎯 Metas Principais da Semana</h2>
+                    <button class="btn-add-small" onclick="openModal('main-goal-modal')">+</button>
+                </div>
+                
+                <div id="main-goals-list" class="main-goals-list">
+                    <p class="empty-state">Adicione até 3 metas principais para esta semana</p>
+                </div>
+            </div>
+
+            <!-- Sub-Goals/Daily Tasks Section -->
+            <div class="sub-goals-section">
+                <div class="section-header">
+                    <h2 class="section-title">✅ Tarefas Diárias</h2>
+                    <button class="btn-add-small" onclick="openModal('sub-goal-modal')">+</button>
+                </div>
+                
+                <div id="sub-goals-list" class="sub-goals-list">
+                    <p class="empty-state">Adicione tarefas diárias para suas metas</p>
+                </div>
+            </div>
+
+            <!-- Progress Graph -->
+            <div class="progress-graph-section">
+                <h2 class="section-title">📊 Progresso Semanal</h2>
+                <div class="chart-container card glass-card">
+                    <canvas id="progress-chart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cycles View -->
+        <section id="cycles-view" class="view">
+            <div class="view-header">
+                <div>
+                    <h2 class="view-title">Ciclos de 12 Semanas</h2>
+                    <p class="view-subtitle">Gerencie seus ciclos</p>
+                </div>
+                <button class="btn btn-primary" onclick="openModal('cycle-modal')">
+                    <span>➕</span> Novo Ciclo
+                </button>
+            </div>
+            <div id="cycles-list" class="cycles-list"></div>
+        </section>
+
+        <!-- Main Goals View -->
+        <section id="main-goals-view" class="view">
+            <div class="view-header">
+                <div>
+                    <h2 class="view-title">Metas Principais</h2>
+                    <p class="view-subtitle">Suas 3 prioridades semanais</p>
+                </div>
+                <button class="btn btn-primary" onclick="openModal('main-goal-modal')">
+                    <span>➕</span> Nova Meta Principal
+                </button>
+            </div>
+            <div id="main-goals-view-list" class="goals-grid"></div>
+        </section>
+
+        <!-- Sub Goals View -->
+        <section id="sub-goals-view" class="view">
+            <div class="view-header">
+                <div>
+                    <h2 class="view-title">Sub-metas</h2>
+                    <p class="view-subtitle">Tarefas vinculadas às metas principais</p>
+                </div>
+                <button class="btn btn-primary" onclick="openModal('sub-goal-modal')">
+                    <span>➕</span> Nova Sub-meta
+                </button>
+            </div>
+            <div id="sub-goals-view-list" class="sub-goals-list"></div>
+        </section>
+
+        <!-- Stats View -->
+        <section id="stats-view" class="view">
+            <div class="view-header">
+                <h2 class="view-title">Estatísticas</h2>
+                <p class="view-subtitle">Seu progresso geral</p>
+            </div>
+            <div id="stats-content" class="stats-grid"></div>
+        </section>
+    </main>
+
+    <!-- Modals -->
+    
+    <!-- Cycle Modal -->
+    <div id="cycle-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Novo Ciclo de 12 Semanas</h3>
+                <button class="modal-close" onclick="closeModal('cycle-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="cycle-form">
+                    <div class="form-group">
+                        <label for="cycle-title">Nome do Ciclo</label>
+                        <input type="text" id="cycle-title" placeholder="Ex: Q1 2026" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cycle-start">Data de Início</label>
+                        <input type="date" id="cycle-start" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('cycle-modal')">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Criar Ciclo</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Goal Modal -->
+    <div id="main-goal-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Nova Meta Principal</h3>
+                <button class="modal-close" onclick="closeModal('main-goal-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="main-goal-form">
+                    <div class="form-group">
+                        <label for="main-goal-title">Título da Meta</label>
+                        <input type="text" id="main-goal-title" placeholder="Ex: Lançar produto" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="main-goal-description">Descrição</label>
+                        <textarea id="main-goal-description" rows="3" placeholder="Descreva sua meta..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="main-goal-priority">Prioridade (1-3)</label>
+                        <select id="main-goal-priority" required>
+                            <option value="1">1 - Alta</option>
+                            <option value="2">2 - Média</option>
+                            <option value="3">3 - Baixa</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('main-goal-modal')">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Criar Meta</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sub Goal Modal -->
+    <div id="sub-goal-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Nova Sub-meta</h3>
+                <button class="modal-close" onclick="closeModal('sub-goal-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="sub-goal-form">
+                    <div class="form-group">
+                        <label for="sub-goal-parent">Meta Principal</label>
+                        <select id="sub-goal-parent" required>
+                            <option value="">Selecione uma meta principal</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="sub-goal-title">Título da Tarefa</label>
+                        <input type="text" id="sub-goal-title" placeholder="Ex: Pesquisar mercado" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="sub-goal-description">Descrição (opcional)</label>
+                        <textarea id="sub-goal-description" rows="2" placeholder="Detalhes..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('sub-goal-modal')">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Criar Sub-meta</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
